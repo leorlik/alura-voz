@@ -29,10 +29,22 @@ Aside from the introduction above, I have not reviewed the material in the `made
 conda env create -f environment.yml
 ```
 
-## Week 1 - Data Cleaning and Initial Steps
+## Step 1 - Data Cleaning and Initial Steps
 
-## Week 2 - Data Analysis
+The notebook that is referenced in these steps is [this one](https://github.com/leorlik/alura-voz/blob/main/1%20-%20Cleaning%20Data/cleaning-data-notebook.ipynb). 
 
-## Week 3 - Modeling
+The json data provided, is, in fact, besides the customerID and the binary "Churn" field, four different dataframes. Here's a summary of each dataframe and it's columns:
 
-## Week 4 - Fine Tuning
+- The "customer" dataframe provides information about the service contractor:
+  - Field "gender" says if the client is a Male or a Female;
+  - Field "SeniorCitzen" says if the client is over 65 years;
+  - Field "Partner" says if the client has a partner;
+  - Field "Dependents" says if the client has Dependents;
+  - Field "tenure" has information about the time the contractor has in the Alura Voz company;
+- The "phone" dataframe provides information about the client's phone service
+
+## Step 2 - Data Analysis
+
+## Step 3 - Modeling
+
+## Step 4 - Fine Tuning
