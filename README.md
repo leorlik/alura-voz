@@ -31,19 +31,100 @@ conda env create -f environment.yml
 
 ## Step 1 - Data Cleaning and Initial Steps
 
-The notebook that is referenced in these steps is [this one](https://github.com/leorlik/alura-voz/blob/main/1%20-%20Cleaning%20Data/cleaning-data-notebook.ipynb). 
+The notebook referenced in these steps is [this one](https://github.com/leorlik/alura-voz/blob/main/1%20-%20Cleaning%20Data/cleaning-data-notebook.ipynb). 
 
-The json data provided, is, in fact, besides the customerID and the binary "Churn" field, four different dataframes. Here's a summary of each dataframe and it's columns:
+The JSON data provided includes, besides the customerID and the binary "Churn" field, four different dataframes. Here's a summary of each dataframe and its columns:
 
 - The "customer" dataframe provides information about the service contractor:
-  - Field "gender" says if the client is a Male or a Female;
-  - Field "SeniorCitzen" says if the client is over 65 years;
-  - Field "Partner" says if the client has a partner;
-  - Field "Dependents" says if the client has Dependents;
-  - Field "tenure" has information about the time the contractor has in the Alura Voz company;
-- The "phone" dataframe provides information about the client's phone service
+
+  - The field gender indicates whether the client is male or female.
+  - The field SeniorCitizen indicates whether the client is over 65 years old.
+  - The field Partner indicates whether the client has a partner.
+  - The field Dependents indicates whether the client has dependents.
+  - The field tenure provides information about the duration of the client's contract with Alura Voz.
+
+- The "phone" dataframe provides information about the client's phone service:
+  - The field PhoneService indicates whether the customer has a phone service in their contract.
+
+  - The field MultipleLines indicates whether the customer has multiple phone lines.
+
+- The "internet" dataframe provides information about the client's internet services:
+
+  - The field InternetService indicates the subscription to an internet provider.
+  - The field OnlineSecurity indicates an additional subscription for online security.
+  - The field OnlineBackup indicates an additional subscription for online backup.
+  - The field DeviceProtection indicates an additional subscription for device protection.
+  - The field TechSupport indicates an additional subscription for technical support, with reduced waiting times.
+  - The field StreamingTV indicates a subscription for cable TV.
+  - The field StreamingMovies indicates a subscription for movie streaming services.
+
+- The "account" dataframe provides information about the client's account details:
+
+  - The field Contract specifies the type of contract.
+  - The field PaperlessBilling indicates whether the client prefers to receive their bill online.
+  - The field PaymentMethod specifies the payment method used by the client.
+  - The field Charges.Monthly indicates the total cost of all services for the client per month.
+  - The field Charges.Total indicates the total amount spent by the client.
+
+These datasets were separated into the SOT layer, along with a unified dataframe containing all the information, available in [this folder](https://github.com/leorlik/alura-voz/tree/main/data/SOT). The initial data treatments were as follows:
+
+- Rows with null values in the Churn field were deleted.
+- Rows with a tenure value of 0 were also deleted.
 
 ## Step 2 - Data Analysis
+
+The notebook referenced in these steps is [this one](https://github.com/leorlik/alura-voz/blob/main/2%20-%20Data%20Analysis/data_analysis.ipynb).
+
+In this step, an analysis of the data and its correlations was conducted, primarily focusing on the Churn variable but not limited to it. Since most of the data consists of categorical variables, chi-squared tests were performed to assess their significance, using the p-value as a reference.
+
+### Numerical Variables (Continuous and Discrete)
+
+There are only three numerical variables in the dataset: tenure, Charges.Monthly, and Charges.Total. To begin the analysis, let's describe them:
+
+| Statistic | Tenure  | Charges Monthly | Charges Total |
+|-----------|--------|----------------|--------------|
+| Count     | 7032.000000 | 7032.000000 | 7032.000000 |
+| Mean      | 32.421786  | 64.798208    | 2283.300441 |
+| Std       | 24.545260  | 30.085974    | 2266.771362 |
+| Min       | 1.000000   | 18.250000    | 18.800000   |
+| 25%       | 9.000000   | 35.587500    | 401.450000  |
+| 50%       | 29.000000  | 70.350000    | 1397.475000 |
+| 75%       | 55.000000  | 89.862500    | 3794.737500 |
+| Max       | 72.000000  | 118.750000   | 8684.800000 |
+
+We can already see that these variables have a wide range, as indicated by their high standard deviations and the large differences between their minimum and maximum values. Additionally, except for Charges.Total, the median is relatively close to the mean.
+
+Another notable relationship is that when we multiply the mean values of tenure and Charges.Monthly, the result is, as expected, close to the mean of Charges.Total.
+
+Looking at the mean, median, and mode of these variables:
+
+| Statistic         | Mean        | Median   | Mode  |
+|------------------|------------|---------|------|
+| Tenure          | 32.421786   | 29.000  | 1.00  |
+| Charges Monthly | 64.798208   | 70.350  | 20.05 |
+| Charges Total   | 2283.300441 | 1397.475 | 20.20 |
+
+It's clear that Charges.Total and tenure follow a right-skewed distribution, possibly indicating the presence of outliers that could be removed in future preprocessing steps.
+
+Histograms can help confirm this assumption and provide further insights into the Charges.Monthly variable.
+
+#### Tenure Histogram
+
+![Histogram of Tenure]("../charts/tenure_hist.png")
+
+The tenure variable shows spikes at the lowest and highest values, confirming a right-skewed distribution. If customers in these extreme groups have high churn rates, they could be considered critical segments.
+
+#### Charges.Monthly Histogram
+
+![Histogram of Monthly Charges]("../charts/Charges.Monthly_hist.png")
+
+Many customers have low monthly charges, and bills between 26 and 43 BRL are quite unusual.
+
+#### Charges.Total Histogram
+
+![Histogram of Total Charges]("../charts/Charges.Total_hist.png")
+
+The Charges.Total variable is a textbook example of a right-skewed distribution. If this variable is included in the model, it may indicate the presence of outliers that should be addressed.
 
 ## Step 3 - Modeling
 
